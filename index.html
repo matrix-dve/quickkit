@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickKit - Ultimate Utility & Media Suite</title>
+    <!-- JSZip Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        :root {
+            --ms-blue: #0078d4;
+            --ms-blue-hover: #106ebe;
+            --ms-bg: #f3f2f1;
+            --ms-card-bg: #ffffff;
+            --ms-text-primary: #201f1e;
+            --ms-text-secondary: #605e5c;
+            --ms-border: #e1dfdd;
+            --ms-hero-bg: linear-gradient(135deg, #eff6fc 0%, #f8fafc 100%);
+            --ms-warning-bg: #fff4ce;
+            --ms-warning-border: #ffe066;
+            --ms-warning-text: #5f370e;
+        }
+
+        [data-theme="dark"] {
+            --ms-blue: #38bdf8;
+            --ms-blue-hover: #0ea5e9;
+            --ms-bg: #121212;
+            --ms-card-bg: #1e1e1e;
+            --ms-text-primary: #f3f4f6;
+            --ms-text-secondary: #9ca3af;
+            --ms-border: #333333;
+            --ms-hero-bg: linear-gradient(135deg, #1e293b 0%, #1e1e1e 100%);
+            --ms-warning-bg: #422006;
+            --ms-warning-border: #854d0e;
+            --ms-warning-text: #fef08a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: var(--ms-card-bg);
+            color: var(--ms-text-primary);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Top Header - Compact Design */
+        header {
+            width: 100%;
+            height: 56px;
+            background-color: var(--ms-card-bg);
+            border-bottom: 1px solid var(--ms-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ms-text-primary);
+        }
+        .icon-btn:hover {
+            background-color: var(--ms-bg);
+        }
+
+        /* CUSTOM MODERN LOGO */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--ms-blue), #004578);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--ms-text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: var(--ms-blue);
+        }
+
+        /* Navigation Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: var(--ms-card-bg);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            height: 56px;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--ms-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            background-color: var(--ms-bg);
+        }
+
+        .menu-items {
+            list-style: none;
+            padding: 8px 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background-color: var(--ms-border);
+            margin: 8px 0;
+        }
+
+        .menu-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--ms-text-secondary);
+            padding: 6px 16px 2px 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-items li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            color: var(--ms-text-primary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-items li a:hover, .menu-items li a.active {
+            background-color: var(--ms-bg);
+            color: var(--ms-blue);
+            border-left-color: var(--ms-blue);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            display: none;
+            z-index: 90;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        main {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* App Views - Compact Padding to reduce unnecessary scrolling */
+        .app-view {
+            display: none;
+            width: 100%;
+            padding: 16px 16px;
+            flex: 1;
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .app-view.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HERO / HOME SECTION - Compact UI */
+        .hero-section {
+            text-align: left;
+            padding: 24px 20px;
+            background: var(--ms-hero-bg);
+            border: 1px solid var(--ms-border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+        }
+
+        .hero-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--ms-blue);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-desc {
+            font-size: 13px;
+            color: var(--ms-text-secondary);
+            max-width: 700px;
+            margin: 0 0 14px 0;
+            line-height: 1.5;
+        }
+
+        /* PRIVACY WARNING BOX - Compact */
+        .privacy-warning-box {
+            background-color: var(--ms-warning-bg);
+            border: 1px solid var(--ms-warning-border);
+            color: var(--ms-warning-text);
+            padding: 10px 14px;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 14px;
+            border-left: 4px solid #f59e0b;
+            border-radius: 4px;
+        }
+
+        .privacy-warning-box strong {
+            display: block;
+            margin-bottom: 2px;
+            font-size: 13px;
+        }
+
+        /* Modern Get Started Button */
+        .btn-get-started {
+            background-color: var(--ms-blue);
+            color: white;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 120, 212, 0.3);
+        }
+
+        .btn-get-started:hover {
+            background-color: var(--ms-blue-hover);
+            transform: translateY(-1px);
+        }
+
+        /* INFO FEATURES LIST - Compact Grid */
+        .info-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .info-card {
+            background: var(--ms-card-bg);
+            border: 1px solid var(--ms-border);
+            padding: 16px;
+            border-radius: 8px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .info-card-icon {
+            color: var(--ms-blue);
+            flex-shrink: 0;
+            background: var(--ms-bg);
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .info-card h3 {
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: var(--ms-text-primary);
+        }
+
+        .info-card p {
+            font-size: 12px;
+            color: var(--ms-text-secondary);
+            line-height: 1.4;
+        }
+
+        /* SPONSORS SECTION - Google Logo Fixed */
+        .sponsors-section {
+            margin-top: auto;
+            padding: 16px 0 8px 0;
+            text-align: center;
+            border-top: 1px solid var(--ms-border);
+        }
+
+        .sponsors-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--ms-text-secondary);
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .sponsors-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .sponsor-logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ms-text-primary);
+        }
+
+        /* DASHBOARD GRID - Compact */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .card-2d {
+            background: var(--ms-card-bg);
+            border: 1px solid var(--ms-border);
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 140px;
+        }
+
+        .card-2d:hover {
+            border-color: var(--ms-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .card-2d-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .card-2d-icon {
+            width: 36px;
+            height: 36px;
+            background-color: var(--ms-bg);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ms-blue);
+            flex-shrink: 0;
+        }
+
+        .card-2d-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .card-2d-desc {
+            font-size: 12px;
+            color: var(--ms-text-secondary);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .card-2d-btn {
+            color: var(--ms-blue);
+            font-weight: 600;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Controls & Form Styles - Compact */
+        h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+        p.desc { font-size: 13px; color: var(--ms-text-secondary); margin-bottom: 16px; }
+
+        .upload-area {
+            width: 100%;
+            min-height: 130px;
+            border: 2px dashed var(--ms-blue);
+            background-color: var(--ms-bg);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 16px;
+            text-align: center;
+        }
+        .upload-area:hover {
+            background-color: rgba(0, 120, 212, 0.04);
+        }
+
+        .upload-area svg { fill: var(--ms-blue); margin-bottom: 8px; }
+
+        .slider-box {
+            background: var(--ms-bg);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border: 1px solid var(--ms-border);
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 5px;
+            background: var(--ms-border);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--ms-blue);
+            cursor: pointer;
+        }
+
+        .btn-fluent {
+            background-color: var(--ms-blue);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-fluent:hover { background-color: var(--ms-blue-hover); }
+
+        .btn-success { background-color: #107c41 !important; }
+        .btn-success:hover { background-color: #0b5a30 !important; }
+
+        .btn-danger { background-color: #d13438 !important; }
+        .btn-danger:hover { background-color: #a7282b !important; }
+
+        .controls {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--ms-border);
+        }
+
+        .preview-card {
+            background: var(--ms-bg);
+            border: 1px solid var(--ms-border);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .preview-card img { max-width: 100%; border-radius: 4px; max-height: 180px; }
+
+        .file-size-badge {
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ms-blue);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        .input-group label { font-size: 12px; font-weight: 600; }
+
+        .input-field, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--ms-border);
+            background-color: var(--ms-card-bg);
+            color: var(--ms-text-primary);
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        .input-field:focus, textarea:focus, select:focus {
+            border-color: var(--ms-blue);
+            box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+        }
+
+        .custom-dim-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            background: var(--ms-bg);
+            padding: 12px;
+            border: 1px dashed var(--ms-border);
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .passport-grid-container {
+            background: var(--ms-card-bg);
+            border: 1px solid var(--ms-border);
+            padding: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            border-radius: 6px;
+        }
+
+        .passport-item {
+            border: 1px solid var(--ms-border);
+            object-fit: cover;
+        }
+
+        .static-page-box {
+            background: var(--ms-card-bg);
+            border: 1px solid var(--ms-border);
+            padding: 16px;
+            line-height: 1.5;
+            border-radius: 8px;
+        }
+
+        .static-page-box h3 { margin-bottom: 8px; color: var(--ms-blue); font-size: 15px; }
+        .static-page-box p { margin-bottom: 8px; font-size: 13px; color: var(--ms-text-secondary); }
+
+        /* HISTORY LIST UI */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: var(--ms-bg);
+            border: 1px solid var(--ms-border);
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 6px;
+        }
+
+        .history-info div:first-child {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .history-info div:last-child {
+            font-size: 11px;
+            color: var(--ms-text-secondary);
+            margin-top: 2px;
+        }
+
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 12px;
+            font-size: 11px;
+            color: var(--ms-text-secondary);
+            border-top: 1px solid var(--ms-border);
+            background-color: var(--ms-card-bg);
+        }
+
+        /* --- ADSTERRA BANNERS & POPUP OVERLAY STYLES --- */
+        .ad-banner-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--ms-bg);
+            border: 1px solid var(--ms-border);
+            border-radius: 6px;
+            padding: 6px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+
+        .ad-label-text {
+            font-size: 9px;
+            color: var(--ms-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        /* 2-Minute Auto Popup Ad Overlay */
+        .ad-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none; /* JS toggles this */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-popup-card {
+            background: var(--ms-card-bg);
+            border: 1px solid var(--ms-border);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            max-width: 90%;
+        }
+
+        .ad-popup-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .ad-popup-timer {
+            font-size: 11px;
+            color: var(--ms-text-secondary);
+            font-weight: 600;
+        }
+
+        .btn-close-ad {
+            background: #d13438;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-close-ad:hover {
+            background: #a7282b;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <button class="icon-btn" onclick="toggleSidebar()" title="Toggle Menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </button>
+            
+            <!-- CUSTOM APP LOGO -->
+            <div class="logo-container" onclick="navigateTo('home-sec')">
+                <div class="logo-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                </div>
+                <div class="logo-text">Quick<span>Kit</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <div class="logo-icon" style="width: 24px; height: 24px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    </svg>
+                </div>
+                <div class="logo-text" style="font-size: 15px;">Quick<span>Kit</span> Menu</div>
+            </div>
+            <button class="icon-btn" onclick="toggleSidebar()" title="Close Menu">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+        </div>
+
+        <ul class="menu-items">
+            <div class="menu-section-title">Navigation</div>
+            <li><a href="#" class="active" onclick="navigateTo('home-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Home Overview</a></li>
+            <li><a href="#" onclick="navigateTo('dashboard-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg> Tools Dashboard</a></li>
+            <li><a href="#" onclick="navigateTo('history-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg> Local History Log</a></li>
+            
+            <div class="menu-divider"></div>
+            <div class="menu-section-title">Media & Utilities</div>
+            <li><a href="#" onclick="navigateTo('passport-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM12 7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0 7c-2.33 0-7 1.17-7 3.5V19h14v-1.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Passport Photo Maker</a></li>
+            <li><a href="#" onclick="navigateTo('image-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg> Image Compressor</a></li>
+            <li><a href="#" onclick="navigateTo('audio-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg> Audio Compressor</a></li>
+            <li><a href="#" onclick="navigateTo('file-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-5 8h-2v2h-2v-2H9v-2h2v-2h2v2h2v2z"/></svg> File / ZIP Compressor</a></li>
+            <li><a href="#" onclick="navigateTo('text-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z"/></svg> Text Repeater</a></li>
+
+            <div class="menu-divider"></div>
+            <div class="menu-section-title">Preferences & Settings</div>
+            <li><a href="#" onclick="toggleDarkMode()"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg> <span id="darkModeMenuText">Dark Mode: OFF</span></a></li>
+
+            <div class="menu-divider"></div>
+            <div class="menu-section-title">Support & Info</div>
+            <li><a href="#" onclick="navigateTo('guide-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg> User Guide & FAQ</a></li>
+            <li><a href="#" onclick="navigateTo('about-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z"/></svg> About Us</a></li>
+            <li><a href="#" onclick="navigateTo('privacy-sec')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8s0 0 0 0 z"/></svg> Privacy Policy</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Workspace -->
+    <main>
+
+        <!-- TOP ADSTERRA BANNER LOCATION #1 (Page Top) -->
+        <div class="ad-banner-container">
+            <div class="ad-label-text">ADVERTISEMENT</div>
+            <script>
+              atOptions = {
+                'key' : '1049b16e7ab79394132c37fdddbdce22',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/1049b16e7ab79394132c37fdddbdce22/invoke.js"></script>
+        </div>
+        
+        <!-- HOME SECTION -->
+        <div id="home-sec" class="app-view active">
+            <div class="hero-section">
+                <h1 class="hero-title">QuickKit Media & Utility Suite</h1>
+                <p class="hero-desc">Fast, secure, and client-side browser tools. Process images, build photo grid sheets, optimize audio files, and manage files securely inside your device with complete privacy.</p>
+                
+                <!-- PRIVACY WARNING BOX -->
+                <div class="privacy-warning-box">
+                    <strong>⚠️ Local Storage & Privacy Notice:</strong>
+                    This website operates entirely on your browser's <strong>Local Storage</strong>. All files remain strictly secure on your device.
+                </div>
+
+                <button class="btn-get-started" onclick="navigateTo('dashboard-sec')">
+                    Get Started
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+            <!-- Features Info List -->
+            <div class="info-features">
+                <div class="info-card">
+                    <div class="info-card-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM12 7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0 7c-2.33 0-7 1.17-7 3.5V19h14v-1.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    </div>
+                    <div>
+                        <h3>Passport & Custom Photo Sheet</h3>
+                        <p>Generate print sheets automatically with standard presets or custom dimensions.</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                    </div>
+                    <div>
+                        <h3>Real-time Image Compressor</h3>
+                        <p>Compress JPG, PNG, and WEBP images in real-time with visual quality control.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADSTERRA BANNER LOCATION #2 (Above Sponsors Section) -->
+            <div class="ad-banner-container">
+                <div class="ad-label-text">ADVERTISEMENT</div>
+                <script>
+                  atOptions = {
+                    'key' : '1049b16e7ab79394132c37fdddbdce22',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://www.highperformanceformat.com/1049b16e7ab79394132c37fdddbdce22/invoke.js"></script>
+            </div>
+
+            <!-- SPONSORS / PARTNERS SECTION WITH OFFICIAL GOOGLE LOGO -->
+            <div class="sponsors-section">
+                <div class="sponsors-title">Trusted By & Featured Partners</div>
+                <div class="sponsors-grid">
+                    <!-- Google Official Branded SVG Logo -->
+                    <div class="sponsor-logo">
+                        <svg width="18" height="18" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.2v3.15C3.18 21.35 7.23 24 12 24z"/>
+                            <path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.61H1.2C.43 8.15 0 9.89 0 12s.43 3.85 1.2 5.39l4.07-3.15z"/>
+                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.18 2.65 1.2 6.61l4.07 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/>
+                        </svg>
+                        Google
+                    </div>
+                    <div class="sponsor-logo">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        Instagram
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD GRID -->
+        <div id="dashboard-sec" class="app-view">
+            <h2>Tools Dashboard</h2>
+            <p class="desc">Select any tool below to begin working:</p>
+
+            <div class="dashboard-grid">
+                
+                <div class="card-2d" onclick="navigateTo('passport-sec')">
+                    <div>
+                        <div class="card-2d-header">
+                            <div class="card-2d-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM12 7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0 7c-2.33 0-7 1.17-7 3.5V19h14v-1.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                            </div>
+                            <div class="card-2d-title">Passport Photo Maker</div>
+                        </div>
+                        <div class="card-2d-desc">Upload photo, set dimensions, and print.</div>
+                    </div>
+                    <div class="card-2d-btn">Open &rarr;</div>
+                </div>
+
+                <div class="card-2d" onclick="navigateTo('image-sec')">
+                    <div>
+                        <div class="card-2d-header">
+                            <div class="card-2d-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                            </div>
+                            <div class="card-2d-title">Image Compressor</div>
+                        </div>
+                        <div class="card-2d-desc">Compress JPG, PNG, WEBP with quality slider.</div>
+                    </div>
+                    <div class="card-2d-btn">Open &rarr;</div>
+                </div>
+
+                <div class="card-2d" onclick="navigateTo('audio-sec')">
+                    <div>
+                        <div class="card-2d-header">
+                            <div class="card-2d-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                            </div>
+                            <div class="card-2d-title">Audio Compressor</div>
+                        </div>
+                        <div class="card-2d-desc">Optimize audio files and lower file sizes.</div>
+                    </div>
+                    <div class="card-2d-btn">Open &rarr;</div>
+                </div>
+
+                <div class="card-2d" onclick="navigateTo('file-sec')">
+                    <div>
+                        <div class="card-2d-header">
+                            <div class="card-2d-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-5 8h-2v2h-2v-2H9v-2h2v-2h2v2h2v2z"/></svg>
+                            </div>
+                            <div class="card-2d-title">File / ZIP Compressor</div>
+                        </div>
+                        <div class="card-2d-desc">Bundle multiple files into a compressed ZIP archive.</div>
+                    </div>
+                    <div class="card-2d-btn">Open &rarr;</div>
+                </div>
+
+                <div class="card-2d" onclick="navigateTo('text-sec')">
+                    <div>
+                        <div class="card-2d-header">
+                            <div class="card-2d-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z"/></svg>
+                            </div>
+                            <div class="card-2d-title">Text Repeater</div>
+                        </div>
+                        <div class="card-2d-desc">Repeat messages or custom lines of text instantly.</div>
+                    </div>
+                    <div class="card-2d-btn">Open &rarr;</div>
+                </div>
+
+                <div class="card-2d" onclick="navigateTo('history-sec')">
+                    <div>
+                        <div class="card-2d-header">
+                            <div class="card-2d-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                            </div>
+                            <div class="card-2d-title">Local History Log</div>
+                        </div>
+                        <div class="card-2d-desc">View history of processed images and audio.</div>
+                    </div>
+                    <div class="card-2d-btn">Open &rarr;</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- HISTORY SECTION -->
+        <div id="history-sec" class="app-view">
+            <h2>Local History & Activity Log</h2>
+            <p class="desc">All your generated items saved locally:</p>
+
+            <div class="preview-card">
+                <div class="history-list" id="historyListContainer"></div>
+            </div>
+
+            <button class="btn-fluent btn-danger" onclick="clearLocalStorageHistory()">
+                Clear All History
+            </button>
+        </div>
+
+        <!-- PASSPORT PHOTO MAKER SECTION -->
+        <div id="passport-sec" class="app-view">
+            <h2>Passport Photo Sheet Generator</h2>
+            <p class="desc">Select photo, set custom size or presets, and print.</p>
+
+            <div class="upload-area" onclick="document.getElementById('passInput').click()">
+                <svg width="36" height="36" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <p style="font-weight: 600; font-size: 13px;">Tap to Select Photo</p>
+                <p id="passFileName" style="font-size: 11px; color: var(--ms-text-secondary); margin-top: 2px;">Supports JPG, PNG</p>
+                <input type="file" id="passInput" accept="image/*" style="display:none" onchange="processPassportImage(this)">
+            </div>
+
+            <div class="controls" id="passControls" style="display:none;">
+                <div class="input-group">
+                    <label>Number of Copies:</label>
+                    <input type="number" id="passCount" class="input-field" value="8" min="1" max="48" onchange="renderPassportGrid()">
+                </div>
+
+                <div class="input-group">
+                    <label>Preset:</label>
+                    <select id="passPreset" class="input-field" onchange="toggleCustomDimensions()">
+                        <option value="standard">Standard Passport (3.5 cm x 4.5 cm)</option>
+                        <option value="stamp">Stamp Size (2.5 cm x 3.0 cm)</option>
+                        <option value="custom">Custom Dimensions</option>
+                    </select>
+                </div>
+
+                <div id="customDimContainer" class="custom-dim-box" style="display: none;">
+                    <div>
+                        <label style="font-size:11px; font-weight:600;">Width:</label>
+                        <input type="number" id="customWidth" class="input-field" value="3.5" step="0.1" onchange="renderPassportGrid()">
+                    </div>
+                    <div>
+                        <label style="font-size:11px; font-weight:600;">Height:</label>
+                        <input type="number" id="customHeight" class="input-field" value="4.5" step="0.1" onchange="renderPassportGrid()">
+                    </div>
+                    <div>
+                        <label style="font-size:11px; font-weight:600;">Unit:</label>
+                        <select id="customUnit" class="input-field" onchange="renderPassportGrid()">
+                            <option value="cm">cm</option>
+                            <option value="mm">mm</option>
+                            <option value="in">inch</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="preview-card">
+                    <h4 style="font-size: 13px; margin-bottom: 6px;">Print Preview Sheet</h4>
+                    <div class="passport-grid-container" id="passportGrid"></div>
+                </div>
+
+                <button class="btn-fluent btn-success" onclick="triggerPassportPrint()">
+                    Print Photo Sheet / Save PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- IMAGE COMPRESSOR -->
+        <div id="image-sec" class="app-view">
+            <h2>Image Compressor</h2>
+            <p class="desc">Compress JPEG, PNG, or WEBP images instantly.</p>
+            
+            <div class="upload-area" onclick="document.getElementById('imgInput').click()">
+                <svg width="36" height="36" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                <p style="font-weight: 600; font-size: 13px;">Tap to Select Image</p>
+                <p id="imgFileName" style="font-size: 11px; color: var(--ms-text-secondary); margin-top: 2px;">Supports JPG, PNG, WEBP</p>
+                <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="processImage(this)">
+            </div>
+
+            <div class="controls" id="imgControls" style="display:none;">
+                <div class="slider-box">
+                    <div class="slider-header">
+                        <span>Quality Level</span>
+                        <span id="imgQualityVal">50%</span>
+                    </div>
+                    <input type="range" id="imgQualitySlider" min="10" max="90" value="50" oninput="compressImage()">
+                </div>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <div class="preview-card" style="flex:1;">
+                        <h4 style="font-size: 12px;">Original</h4>
+                        <img id="origImgPreview">
+                        <div class="file-size-badge" id="origImgSize">0 KB</div>
+                    </div>
+                    <div class="preview-card" style="flex:1;">
+                        <h4 style="font-size: 12px;">Compressed</h4>
+                        <img id="compImgPreview">
+                        <div class="file-size-badge" id="compImgSize">0 KB</div>
+                    </div>
+                </div>
+
+                <button class="btn-fluent btn-success" onclick="downloadImageReal()">
+                    Download Compressed Image
+                </button>
+            </div>
+        </div>
+
+        <!-- AUDIO COMPRESSOR -->
+        <div id="audio-sec" class="app-view">
+            <h2>Audio Compressor</h2>
+            <p class="desc">Lower audio file size for sharing.</p>
+            
+            <div class="upload-area" onclick="document.getElementById('audInput').click()">
+                <svg width="36" height="36" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                <p style="font-weight: 600; font-size: 13px;">Tap to Select Audio File</p>
+                <p id="audFileName" style="font-size: 11px; color: var(--ms-text-secondary); margin-top: 2px;">Supports MP3, WAV, AAC</p>
+                <input type="file" id="audInput" accept="audio/*" style="display:none" onchange="processAudio(this)">
+            </div>
+
+            <div class="controls" id="audControls" style="display:none;">
+                <div class="preview-card">
+                    <h4 style="font-size: 12px;">Audio Player</h4>
+                    <audio id="audPreview" controls style="width: 100%; margin: 8px 0;"></audio>
+                    <div class="file-size-badge" id="audSize">Original Size: 0 MB</div>
+                </div>
+
+                <button class="btn-fluent btn-success" onclick="downloadAudioReal()">
+                    Download Processed Audio
+                </button>
+            </div>
+        </div>
+
+        <!-- FILE / ZIP COMPRESSOR -->
+        <div id="file-sec" class="app-view">
+            <h2>File / ZIP Compressor</h2>
+            <p class="desc">Convert multiple files into a single ZIP archive.</p>
+            
+            <div class="upload-area" onclick="document.getElementById('docInput').click()">
+                <svg width="36" height="36" viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-5 8h-2v2h-2v-2H9v-2h2v-2h2v2h2v2z"/></svg>
+                <p style="font-weight: 600; font-size: 13px;">Tap to Select Files</p>
+                <p id="zipStatusText" style="font-size: 11px; color: var(--ms-text-secondary); margin-top: 2px;">Select files to bundle into ZIP</p>
+                <input type="file" id="docInput" multiple style="display:none" onchange="handleZipFiles(this)">
+            </div>
+
+            <div class="controls" id="zipControls" style="display:none;">
+                <div class="preview-card">
+                    <h4 id="zipFileCountText" style="font-size: 12px;">0 Files Selected</h4>
+                    <div class="file-size-badge" id="zipTotalSizeText">Total Size: 0 MB</div>
+                </div>
+
+                <button class="btn-fluent btn-success" id="downloadZipBtn" onclick="generateAndDownloadZip()">
+                    Create & Download ZIP
+                </button>
+            </div>
+        </div>
+
+        <!-- TEXT REPEATER -->
+        <div id="text-sec" class="app-view">
+            <h2>Text Repeater</h2>
+            <p class="desc">Repeat text multiple times easily.</p>
+
+            <div class="input-group">
+                <label>Enter Text to Repeat:</label>
+                <textarea id="repeatTextInput" rows="2" placeholder="Type text here..."></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Repeat Count:</label>
+                <input type="number" id="repeatCountInput" class="input-field" value="10" min="1" max="10000">
+            </div>
+
+            <div class="input-group">
+                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+                    <input type="checkbox" id="newLineCheck" checked style="width: 14px; height: 14px;"> Add New Line after each repeat
+                </label>
+            </div>
+
+            <button class="btn-fluent" onclick="generateRepeatedText()">
+                Generate Repeated Text
+            </button>
+
+            <div class="controls" id="repeaterResultBox" style="display:none;">
+                <div class="input-group">
+                    <label>Generated Output:</label>
+                    <textarea id="repeatOutputText" rows="4" readonly></textarea>
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-fluent" onclick="copyRepeatedText()" style="background-color: #333;">Copy</button>
+                    <button class="btn-fluent btn-success" onclick="downloadRepeatedText()">Download .txt</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- USER GUIDE & FAQ -->
+        <div id="guide-sec" class="app-view">
+            <h2>User Guide & FAQ</h2>
+            <p class="desc">Learn how to use QuickKit tools.</p>
+            <div class="static-page-box">
+                <h3>How to use Passport Photo Studio?</h3>
+                <p>1. Tap the upload area and select a photo.</p>
+                <p>2. Choose a preset or custom dimensions.</p>
+                <p>3. Set copies and click print.</p>
+            </div>
+        </div>
+
+        <!-- ABOUT US -->
+        <div id="about-sec" class="app-view">
+            <h2>About QuickKit</h2>
+            <p class="desc">Your privacy-first utility web application.</p>
+            <div class="static-page-box">
+                <h3>About QuickKit Utility Suite</h3>
+                <p>QuickKit is designed for ultra-fast utility tools without server delays.</p>
+                <p>Version: 3.1.0 (Optimized Compact UI)</p>
+            </div>
+        </div>
+
+        <!-- PRIVACY POLICY -->
+        <div id="privacy-sec" class="app-view">
+            <h2>Privacy Policy</h2>
+            <p class="desc">How we protect your data.</p>
+            <div class="static-page-box">
+                <h3>100% Local & Private Processing</h3>
+                <p>QuickKit does not collect or upload any user files or personal data to remote servers.</p>
+            </div>
+        </div>
+
+        <!-- ADSTERRA BANNER LOCATION #3 (Above Footer) -->
+        <div class="ad-banner-container">
+            <div class="ad-label-text">ADVERTISEMENT</div>
+            <script>
+              atOptions = {
+                'key' : '1049b16e7ab79394132c37fdddbdce22',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/1049b16e7ab79394132c37fdddbdce22/invoke.js"></script>
+        </div>
+
+    </main>
+
+    <footer>
+        © 2026 QuickKit | Universal Utility Suite (Local-First Engine)
+    </footer>
+
+    <!-- POPUP AD OVERLAY (Fires 2 Minutes After Load, Closes 10s After) -->
+    <div class="ad-popup-overlay" id="adPopupOverlay">
+        <div class="ad-popup-card">
+            <div class="ad-popup-header">
+                <div class="ad-popup-timer" id="adPopupTimerText">Closing in 10s...</div>
+                <button class="btn-close-ad" onclick="closeAdPopup()">Close ✕</button>
+            </div>
+            <div class="ad-label-text">SPONSORED ANNOUNCEMENT</div>
+            <!-- Adsterra Code inside Popup -->
+            <script>
+              atOptions = {
+                'key' : '1049b16e7ab79394132c37fdddbdce22',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/1049b16e7ab79394132c37fdddbdce22/invoke.js"></script>
+        </div>
+    </div>
+
+    <!-- JavaScript Engine -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('quickkit_theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('darkModeMenuText').innerText = "Dark Mode: ON";
+            }
+            loadHistoryToUI();
+            
+            // Trigger 2-Minute Popup Challenge
+            startTwoMinAdChallenge();
+        });
+
+        // ---------------- 2-MINUTE AD POPUP LOGIC ----------------
+        function startTwoMinAdChallenge() {
+            // 2 minutes = 120,000 milliseconds
+            setTimeout(() => {
+                showAdPopup();
+            }, 120000); 
+        }
+
+        let popupCountdownTimer = null;
+
+        function showAdPopup() {
+            const overlay = document.getElementById('adPopupOverlay');
+            overlay.style.display = 'flex';
+
+            let secondsLeft = 10;
+            const timerText = document.getElementById('adPopupTimerText');
+            timerText.innerText = `Auto-closing in ${secondsLeft}s...`;
+
+            popupCountdownTimer = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft > 0) {
+                    timerText.innerText = `Auto-closing in ${secondsLeft}s...`;
+                } else {
+                    closeAdPopup();
+                }
+            }, 1000);
+        }
+
+        function closeAdPopup() {
+            if (popupCountdownTimer) clearInterval(popupCountdownTimer);
+            document.getElementById('adPopupOverlay').style.display = 'none';
+        }
+        // ---------------------------------------------------------
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        function navigateTo(sectionId) {
+            document.querySelectorAll('.app-view').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.menu-items a').forEach(a => a.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+
+            if (sectionId === 'history-sec') {
+                loadHistoryToUI();
+            }
+
+            window.scrollTo(0,0);
+        }
+
+        function toggleDarkMode() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('quickkit_theme', 'light');
+                document.getElementById('darkModeMenuText').innerText = "Dark Mode: OFF";
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('quickkit_theme', 'dark');
+                document.getElementById('darkModeMenuText').innerText = "Dark Mode: ON";
+            }
+            toggleSidebar();
+        }
+
+        function saveToHistory(actionName, details) {
+            let history = JSON.parse(localStorage.getItem('quickkit_history') || '[]');
+            const timestamp = new Date().toLocaleString();
+            history.unshift({ action: actionName, details: details, time: timestamp });
+            if (history.length > 50) history.pop();
+            localStorage.setItem('quickkit_history', JSON.stringify(history));
+        }
+
+        function loadHistoryToUI() {
+            const container = document.getElementById('historyListContainer');
+            let history = JSON.parse(localStorage.getItem('quickkit_history') || '[]');
+
+            if (history.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color: var(--ms-text-secondary); padding: 12px;">No history records found yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = "";
+            history.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <div class="history-info">
+                        <div>🔧 ${item.action}</div>
+                        <div>${item.details} • <i>${item.time}</i></div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function clearLocalStorageHistory() {
+            if (confirm("Are you sure you want to clear local storage history?")) {
+                localStorage.removeItem('quickkit_history');
+                loadHistoryToUI();
+            }
+        }
+
+        let loadedPassImgUrl = "";
+        let currentPassFileName = "";
+
+        function processPassportImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            currentPassFileName = file.name;
+            document.getElementById('passFileName').innerText = "Selected: " + file.name;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                loadedPassImgUrl = e.target.result;
+                document.getElementById('passControls').style.display = 'block';
+                renderPassportGrid();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function toggleCustomDimensions() {
+            const preset = document.getElementById('passPreset').value;
+            const customBox = document.getElementById('customDimContainer');
+            customBox.style.display = (preset === 'custom') ? 'grid' : 'none';
+            renderPassportGrid();
+        }
+
+        function renderPassportGrid() {
+            if (!loadedPassImgUrl) return;
+
+            const count = parseInt(document.getElementById('passCount').value) || 1;
+            const preset = document.getElementById('passPreset').value;
+            const container = document.getElementById('passportGrid');
+            container.innerHTML = "";
+
+            let wPx = 105, hPx = 135; 
+            if (preset === 'standard') { wPx = 105; hPx = 135; } 
+            else if (preset === 'stamp') { wPx = 75; hPx = 90; } 
+            else if (preset === 'custom') {
+                const wVal = parseFloat(document.getElementById('customWidth').value) || 3.5;
+                const hVal = parseFloat(document.getElementById('customHeight').value) || 4.5;
+                const unit = document.getElementById('customUnit').value;
+                let multiplier = 30;
+                if (unit === 'mm') multiplier = 3;
+                if (unit === 'in') multiplier = 75;
+                wPx = Math.round(wVal * multiplier);
+                hPx = Math.round(hVal * multiplier);
+            }
+
+            for (let i = 0; i < count; i++) {
+                const img = document.createElement('img');
+                img.src = loadedPassImgUrl;
+                img.className = 'passport-item';
+                img.style.width = wPx + 'px';
+                img.style.height = hPx + 'px';
+                container.appendChild(img);
+            }
+        }
+
+        function triggerPassportPrint() {
+            saveToHistory("Passport Photo Sheet", `File: ${currentPassFileName} (${document.getElementById('passCount').value} copies)`);
+            window.print();
+        }
+
+        let loadedImg = null, generatedImgDataUrl = "", currentImgName = "";
+
+        function processImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            currentImgName = file.name;
+            document.getElementById('imgFileName').innerText = "Selected: " + file.name;
+            document.getElementById('origImgSize').innerText = `Original: ${(file.size / 1024).toFixed(1)} KB`;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('origImgPreview').src = e.target.result;
+                loadedImg = new Image();
+                loadedImg.src = e.target.result;
+                loadedImg.onload = function() {
+                    document.getElementById('imgControls').style.display = 'block';
+                    compressImage();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function compressImage() {
+            if (!loadedImg) return;
+            const q = document.getElementById('imgQualitySlider').value;
+            document.getElementById('imgQualityVal').innerText = q + '%';
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = loadedImg.width;
+            canvas.height = loadedImg.height;
+            ctx.drawImage(loadedImg, 0, 0, canvas.width, canvas.height);
+            generatedImgDataUrl = canvas.toDataURL('image/jpeg', q / 100);
+
+            document.getElementById('compImgPreview').src = generatedImgDataUrl;
+            const head = 'data:image/jpeg;base64,';
+            const sizeInBytes = Math.round((generatedImgDataUrl.length - head.length) * 3 / 4);
+            document.getElementById('compImgSize').innerText = `New: ${(sizeInBytes / 1024).toFixed(1)} KB`;
+        }
+
+        function downloadImageReal() {
+            if (!generatedImgDataUrl) return;
+            saveToHistory("Image Compression", `Compressed ${currentImgName}`);
+            const a = document.createElement('a');
+            a.href = generatedImgDataUrl;
+            a.download = "compressed_" + currentImgName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        let loadedAudFile = null;
+        function processAudio(input) {
+            const file = input.files[0];
+            if (!file) return;
+            loadedAudFile = file;
+            document.getElementById('audFileName').innerText = "Selected: " + file.name;
+            document.getElementById('audSize').innerText = `Size: ${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+            document.getElementById('audPreview').src = URL.createObjectURL(file);
+            document.getElementById('audControls').style.display = 'block';
+        }
+
+        function downloadAudioReal() {
+            if (!loadedAudFile) return;
+            saveToHistory("Audio Optimization", `Processed audio: ${loadedAudFile.name}`);
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(loadedAudFile);
+            a.download = "processed_" + loadedAudFile.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        let selectedZipFiles = [];
+        function handleZipFiles(input) {
+            if (!input.files || input.files.length === 0) return;
+            selectedZipFiles = Array.from(input.files);
+            let totalBytes = selectedZipFiles.reduce((acc, file) => acc + file.size, 0);
+            document.getElementById('zipStatusText').innerText = `${selectedZipFiles.length} file(s) selected`;
+            document.getElementById('zipFileCountText').innerText = `${selectedZipFiles.length} Files Ready`;
+            document.getElementById('zipTotalSizeText').innerText = `Total Size: ${(totalBytes / (1024 * 1024)).toFixed(2)} MB`;
+            document.getElementById('zipControls').style.display = 'block';
+        }
+
+        async function generateAndDownloadZip() {
+            if (selectedZipFiles.length === 0) return;
+            const btn = document.getElementById('downloadZipBtn');
+            btn.innerText = "Creating ZIP...";
+            btn.disabled = true;
+
+            const zip = new JSZip();
+            selectedZipFiles.forEach(file => zip.file(file.name, file));
+            const content = await zip.generateAsync({ type: "blob" });
+            
+            saveToHistory("ZIP Archiver", `Bundled ${selectedZipFiles.length} files`);
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(content);
+            a.download = "Compressed_Archive.zip";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            btn.innerText = "Create & Download ZIP";
+            btn.disabled = false;
+        }
+
+        function generateRepeatedText() {
+            const text = document.getElementById('repeatTextInput').value;
+            const count = parseInt(document.getElementById('repeatCountInput').value) || 1;
+            const addNewLine = document.getElementById('newLineCheck').checked;
+
+            if (!text) { alert("Please enter text first!"); return; }
+            const separator = addNewLine ? "\n" : " ";
+            const result = Array(count).fill(text).join(separator);
+
+            saveToHistory("Text Repeater", `Repeated text ${count} times`);
+            document.getElementById('repeatOutputText').value = result;
+            document.getElementById('repeaterResultBox').style.display = 'block';
+        }
+
+        function copyRepeatedText() {
+            const output = document.getElementById('repeatOutputText');
+            output.select();
+            navigator.clipboard.writeText(output.value);
+            alert("Copied to clipboard!");
+        }
+
+        function downloadRepeatedText() {
+            const text = document.getElementById('repeatOutputText').value;
+            if (!text) return;
+            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "RepeatedText.txt";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
