@@ -3,7 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickKit - Ultimate Utility & Media Suite</title>
+    
+    <!-- TOP GOOGLE SEARCH INDEXING & SEO META TAGS -->
+    <title>QuickKit</title>
+    <meta name="description" content="QuickKit is a fast, free, and 100% private online utility suite. Compress JPG/PNG images, convert files to ZIP, generate passport photo print sheets, compress audio files, and repeat text—all completely inside your browser locally.">
+    <meta name="keywords" content="image compressor, online passport photo maker, passport photo sheet generator, zip file compressor, audio size reducer, text repeater tool, free web utilities, private file processing">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="QuickKit">
+    <link rel="canonical" href="https://matrix-dve.github.io/quickkit/">
+
+    <!-- OPEN GRAPH (FOR SOCIAL MEDIA SHARING) -->
+    <meta property="og:title" content="QuickKit - Ultimate Online Utility & Media Suite">
+    <meta property="og:description" content="Compress images, create passport photos, zip files, and reduce audio size locally without server uploads. Clean, fast, and secure.">
+    <meta property="og:image" content="https://i.ibb.co/gbq0jD0d/20260725-201538.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://matrix-dve.github.io/quickkit/">
+
+    
+  <!-- SCHEMA.ORG STRUCTURED DATA FOR GOOGLE RICH RESULTS -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "QuickKit Utility Suite",
+  "url": "https://matrix-dve.github.io/quickkit/",
+  "image": "https://i.ibb.co/gbq0jD0d/20260725-201538.png",
+  "description": "Browser-based client-side utility suite for image compression, passport photo sheet creation, audio processing, ZIP generation, and text repetition.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+
     <!-- JSZip Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
@@ -53,7 +89,6 @@
             overflow-x: hidden;
         }
 
-        /* Top Header - Compact Design */
         header {
             width: 100%;
             height: 56px;
@@ -89,7 +124,6 @@
             background-color: var(--ms-bg);
         }
 
-        /* CUSTOM MODERN LOGO */
         .logo-container {
             display: flex;
             align-items: center;
@@ -120,7 +154,6 @@
             color: var(--ms-blue);
         }
 
-        /* Navigation Sidebar */
         .sidebar {
             position: fixed;
             top: 0;
@@ -214,7 +247,6 @@
             flex-direction: column;
         }
 
-        /* App Views - Compact Padding to reduce unnecessary scrolling */
         .app-view {
             display: none;
             width: 100%;
@@ -229,7 +261,6 @@
             flex-direction: column;
         }
 
-        /* HERO / HOME SECTION - Compact UI */
         .hero-section {
             text-align: left;
             padding: 24px 20px;
@@ -256,7 +287,6 @@
             line-height: 1.5;
         }
 
-        /* PRIVACY WARNING BOX - Compact */
         .privacy-warning-box {
             background-color: var(--ms-warning-bg);
             border: 1px solid var(--ms-warning-border);
@@ -275,7 +305,6 @@
             font-size: 13px;
         }
 
-        /* Modern Get Started Button */
         .btn-get-started {
             background-color: var(--ms-blue);
             color: white;
@@ -297,7 +326,6 @@
             transform: translateY(-1px);
         }
 
-        /* INFO FEATURES LIST - Compact Grid */
         .info-features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -335,7 +363,6 @@
             line-height: 1.4;
         }
 
-        /* SPONSORS SECTION - Google Logo Fixed */
         .sponsors-section {
             margin-top: auto;
             padding: 16px 0 8px 0;
@@ -369,7 +396,6 @@
             color: var(--ms-text-primary);
         }
 
-        /* DASHBOARD GRID - Compact */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -436,7 +462,6 @@
             gap: 4px;
         }
 
-        /* Controls & Form Styles - Compact */
         h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
         p.desc { font-size: 13px; color: var(--ms-text-secondary); margin-bottom: 16px; }
 
@@ -608,7 +633,6 @@
         .static-page-box h3 { margin-bottom: 8px; color: var(--ms-blue); font-size: 15px; }
         .static-page-box p { margin-bottom: 8px; font-size: 13px; color: var(--ms-text-secondary); }
 
-        /* HISTORY LIST UI */
         .history-list {
             display: flex;
             flex-direction: column;
@@ -648,7 +672,6 @@
             background-color: var(--ms-card-bg);
         }
 
-        /* --- ADSTERRA BANNERS & POPUP OVERLAY STYLES --- */
         .ad-banner-container {
             width: 100%;
             display: flex;
@@ -671,7 +694,6 @@
             margin-bottom: 4px;
         }
 
-        /* 2-Minute Auto Popup Ad Overlay */
         .ad-popup-overlay {
             position: fixed;
             top: 0;
@@ -681,7 +703,7 @@
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(4px);
             z-index: 9999;
-            display: none; /* JS toggles this */
+            display: none;
             align-items: center;
             justify-content: center;
         }
@@ -730,14 +752,12 @@
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <div class="header-left">
             <button class="icon-btn" onclick="toggleSidebar()" title="Toggle Menu">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             </button>
             
-            <!-- CUSTOM APP LOGO -->
             <div class="logo-container" onclick="navigateTo('home-sec')">
                 <div class="logo-icon">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -751,7 +771,6 @@
         </div>
     </header>
 
-    <!-- Sidebar Menu -->
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
     
     <div class="sidebar" id="sidebar">
@@ -795,10 +814,8 @@
         </ul>
     </div>
 
-    <!-- Main Workspace -->
     <main>
 
-        <!-- TOP ADSTERRA BANNER LOCATION #1 (Page Top) -->
         <div class="ad-banner-container">
             <div class="ad-label-text">ADVERTISEMENT</div>
             <script>
@@ -813,13 +830,11 @@
             <script src="https://www.highperformanceformat.com/1049b16e7ab79394132c37fdddbdce22/invoke.js"></script>
         </div>
         
-        <!-- HOME SECTION -->
         <div id="home-sec" class="app-view active">
             <div class="hero-section">
                 <h1 class="hero-title">QuickKit Media & Utility Suite</h1>
                 <p class="hero-desc">Fast, secure, and client-side browser tools. Process images, build photo grid sheets, optimize audio files, and manage files securely inside your device with complete privacy.</p>
                 
-                <!-- PRIVACY WARNING BOX -->
                 <div class="privacy-warning-box">
                     <strong>⚠️ Local Storage & Privacy Notice:</strong>
                     This website operates entirely on your browser's <strong>Local Storage</strong>. All files remain strictly secure on your device.
@@ -831,7 +846,6 @@
                 </button>
             </div>
 
-            <!-- Features Info List -->
             <div class="info-features">
                 <div class="info-card">
                     <div class="info-card-icon">
@@ -854,7 +868,6 @@
                 </div>
             </div>
 
-            <!-- ADSTERRA BANNER LOCATION #2 (Above Sponsors Section) -->
             <div class="ad-banner-container">
                 <div class="ad-label-text">ADVERTISEMENT</div>
                 <script>
@@ -869,11 +882,9 @@
                 <script src="https://www.highperformanceformat.com/1049b16e7ab79394132c37fdddbdce22/invoke.js"></script>
             </div>
 
-            <!-- SPONSORS / PARTNERS SECTION WITH OFFICIAL GOOGLE LOGO -->
             <div class="sponsors-section">
                 <div class="sponsors-title">Trusted By & Featured Partners</div>
                 <div class="sponsors-grid">
-                    <!-- Google Official Branded SVG Logo -->
                     <div class="sponsor-logo">
                         <svg width="18" height="18" viewBox="0 0 24 24">
                             <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
@@ -891,7 +902,6 @@
             </div>
         </div>
 
-        <!-- DASHBOARD GRID -->
         <div id="dashboard-sec" class="app-view">
             <h2>Tools Dashboard</h2>
             <p class="desc">Select any tool below to begin working:</p>
@@ -979,7 +989,6 @@
             </div>
         </div>
 
-        <!-- HISTORY SECTION -->
         <div id="history-sec" class="app-view">
             <h2>Local History & Activity Log</h2>
             <p class="desc">All your generated items saved locally:</p>
@@ -993,7 +1002,6 @@
             </button>
         </div>
 
-        <!-- PASSPORT PHOTO MAKER SECTION -->
         <div id="passport-sec" class="app-view">
             <h2>Passport Photo Sheet Generator</h2>
             <p class="desc">Select photo, set custom size or presets, and print.</p>
@@ -1050,7 +1058,6 @@
             </div>
         </div>
 
-        <!-- IMAGE COMPRESSOR -->
         <div id="image-sec" class="app-view">
             <h2>Image Compressor</h2>
             <p class="desc">Compress JPEG, PNG, or WEBP images instantly.</p>
@@ -1090,7 +1097,6 @@
             </div>
         </div>
 
-        <!-- AUDIO COMPRESSOR -->
         <div id="audio-sec" class="app-view">
             <h2>Audio Compressor</h2>
             <p class="desc">Lower audio file size for sharing.</p>
@@ -1115,7 +1121,6 @@
             </div>
         </div>
 
-        <!-- FILE / ZIP COMPRESSOR -->
         <div id="file-sec" class="app-view">
             <h2>File / ZIP Compressor</h2>
             <p class="desc">Convert multiple files into a single ZIP archive.</p>
@@ -1139,7 +1144,6 @@
             </div>
         </div>
 
-        <!-- TEXT REPEATER -->
         <div id="text-sec" class="app-view">
             <h2>Text Repeater</h2>
             <p class="desc">Repeat text multiple times easily.</p>
@@ -1177,7 +1181,6 @@
             </div>
         </div>
 
-        <!-- USER GUIDE & FAQ -->
         <div id="guide-sec" class="app-view">
             <h2>User Guide & FAQ</h2>
             <p class="desc">Learn how to use QuickKit tools.</p>
@@ -1189,7 +1192,6 @@
             </div>
         </div>
 
-        <!-- ABOUT US -->
         <div id="about-sec" class="app-view">
             <h2>About QuickKit</h2>
             <p class="desc">Your privacy-first utility web application.</p>
@@ -1200,7 +1202,6 @@
             </div>
         </div>
 
-        <!-- PRIVACY POLICY -->
         <div id="privacy-sec" class="app-view">
             <h2>Privacy Policy</h2>
             <p class="desc">How we protect your data.</p>
@@ -1210,7 +1211,6 @@
             </div>
         </div>
 
-        <!-- ADSTERRA BANNER LOCATION #3 (Above Footer) -->
         <div class="ad-banner-container">
             <div class="ad-label-text">ADVERTISEMENT</div>
             <script>
@@ -1231,7 +1231,6 @@
         © 2026 QuickKit | Universal Utility Suite (Local-First Engine)
     </footer>
 
-    <!-- POPUP AD OVERLAY (Fires 2 Minutes After Load, Closes 10s After) -->
     <div class="ad-popup-overlay" id="adPopupOverlay">
         <div class="ad-popup-card">
             <div class="ad-popup-header">
@@ -1239,7 +1238,6 @@
                 <button class="btn-close-ad" onclick="closeAdPopup()">Close ✕</button>
             </div>
             <div class="ad-label-text">SPONSORED ANNOUNCEMENT</div>
-            <!-- Adsterra Code inside Popup -->
             <script>
               atOptions = {
                 'key' : '1049b16e7ab79394132c37fdddbdce22',
@@ -1253,7 +1251,6 @@
         </div>
     </div>
 
-    <!-- JavaScript Engine -->
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('quickkit_theme');
@@ -1263,13 +1260,10 @@
             }
             loadHistoryToUI();
             
-            // Trigger 2-Minute Popup Challenge
             startTwoMinAdChallenge();
         });
 
-        // ---------------- 2-MINUTE AD POPUP LOGIC ----------------
         function startTwoMinAdChallenge() {
-            // 2 minutes = 120,000 milliseconds
             setTimeout(() => {
                 showAdPopup();
             }, 120000); 
@@ -1299,7 +1293,6 @@
             if (popupCountdownTimer) clearInterval(popupCountdownTimer);
             document.getElementById('adPopupOverlay').style.display = 'none';
         }
-        // ---------------------------------------------------------
 
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
